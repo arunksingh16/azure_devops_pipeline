@@ -1,4 +1,6 @@
-name: MY_PIPELINE-${{ parameters.yourENV }}-$(Build.BuildId)
+# Build Name and Number:- https://docs.microsoft.com/en-us/azure/devops/pipelines/process/run-number?view=azure-devops&tabs=yaml
+
+name: MY_PIPELINE-${{ parameters.yourENV }}-$(SourceBranchName)-$(Build.BuildId)-$(Date:yyyyMMdd)
 
 trigger: none
 
@@ -64,6 +66,9 @@ stages:
 
 - ${{ if eq(parameters.test, true) }}:
   - stage: stage-2
+    pool: 
+     name: MY-POOL
+     demands: 'Agent.Name -equals myagent'
     displayName: stage-2
     dependsOn: stage-1
     jobs:
@@ -72,3 +77,10 @@ stages:
  # Steps are implemented by tasks. Tasks themselves are implemented as Node.js or PowerShell scripts
       steps:
       - script: echo "Hello"
+ 
+- stage: stage-3
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - job: customjob    
+    steps:
+    - script: echo "Hello"
