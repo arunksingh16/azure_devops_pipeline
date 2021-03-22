@@ -1,6 +1,6 @@
 # Build Name and Number:- https://docs.microsoft.com/en-us/azure/devops/pipelines/process/run-number?view=azure-devops&tabs=yaml
 
-name: MY_PIPELINE-${{ parameters.yourENV }}-$(SourceBranchName)-$(Build.BuildId)-$(Date:yyyyMMdd)
+name: MY_PIPELINE-$(TeamProject)-${{ parameters.yourENV }}-$(SourceBranchName)-$(Build.BuildId)-$(Date:ddMMyyyy)
 
 trigger: none
 
