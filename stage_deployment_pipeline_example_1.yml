@@ -1,0 +1,42 @@
+trigger: none
+
+pool:
+  name: $(YOUR-POOL-NAME)
+
+parameters:
+- name: 'yourENV'
+  default: DEV
+  type: string
+  values:
+  - DEV
+  - TST
+  - UAT
+
+variables:
+  - group: ANY_GRP_NAME
+  - template: ANY_TEMP_NAME.yml
+  - ${{ if eq(parameters.yourENV, 'DEV') }}:
+    - group: ANY_GRP_NAME_1
+    - name: VAR
+      value: VAR_VAL
+
+stages:
+- stage: deploy
+  jobs:
+  - deployment: deploymentJob
+    displayName: deploymentJob Display Name
+    pool:
+      name: $(YOUR-POOL-NAME)
+    environment: '${{ parameters.yourENV }}'
+    workspace:
+      clean: all
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: none
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo "Hello"
