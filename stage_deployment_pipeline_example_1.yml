@@ -24,6 +24,11 @@ parameters:
   default: false
   type: boolean
 
+- name: test
+  displayName: Run Tests?
+  type: boolean
+  default: false
+
 variables:
   - group: ANY_GRP_NAME
   - template: ANY_TEMP_NAME.yml
@@ -33,7 +38,7 @@ variables:
       value: VAR_VAL
 
 stages:
-- stage: deploy
+- stage: stage-1
   condition: and(eq('${{ parameters.param2 }}', false),ne('${{ parameters.param1 }}', true))
   jobs:
   - deployment: deploymentJob
@@ -53,3 +58,17 @@ stages:
               targetType: 'inline'
               script: |
                 echo "Hello"
+          - script: echo building $(Build.BuildNumber)
+          - ${{ if eq(parameters.test, true) }}:
+            - script: echo "Running all the tests"
+
+- ${{ if eq(parameters.test, true) }}:
+  - stage: stage-2
+    displayName: stage-2
+    dependsOn: stage-1
+    jobs:
+    - job: customjob
+    
+ # Steps are implemented by tasks. Tasks themselves are implemented as Node.js or PowerShell scripts
+      steps:
+      - script: echo "Hello"
