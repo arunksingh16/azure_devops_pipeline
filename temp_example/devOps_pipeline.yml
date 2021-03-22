@@ -1,0 +1,49 @@
+
+trigger: none
+
+pool:
+  name: $(YOUR-POOL-NAME)
+
+parameters:
+- name: 'TaskItem'
+  default: TK0
+  type: string
+  values:
+  - TK0
+  - TK1
+  - TK2
+
+- name: param1
+  displayName: "do the task"
+  default: false
+  type: boolean
+
+- name: param2
+  displayName: "do the task"
+  default: false
+  type: boolean
+
+stages:
+- stage: START
+  jobs:
+  - job: 
+    displayName: START OF JOB
+    steps:
+    - checkout: none
+
+- ${{ if eq(parameters.TaskItem, 'TK0') }}:
+  - stage: STG-TK0
+    jobs:
+    - template: templates/TK0.yml
+      parameters:
+        param1: $(param1)
+        param2: ${{ parameters.param2 }}
+
+
+- ${{ if eq(parameters.TaskItem, 'TK1') }}:
+  - stage: STG-TK1
+    jobs:
+    - template: templates/TK1.yml
+      parameters:
+        param1: $(param1)
+        param2: ${{ parameters.param2 }}
