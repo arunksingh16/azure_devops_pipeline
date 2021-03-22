@@ -1,3 +1,5 @@
+name: MY_PIPELINE-${{ parameters.yourENV }}-$(Build.BuildId)
+
 trigger: none
 
 pool:
@@ -12,6 +14,16 @@ parameters:
   - TST
   - UAT
 
+- name: param1
+  displayName: "do the task"
+  default: false
+  type: boolean
+
+- name: param2
+  displayName: "do the task"
+  default: false
+  type: boolean
+
 variables:
   - group: ANY_GRP_NAME
   - template: ANY_TEMP_NAME.yml
@@ -22,6 +34,7 @@ variables:
 
 stages:
 - stage: deploy
+  condition: and(eq('${{ parameters.param2 }}', false),ne('${{ parameters.param1 }}', true))
   jobs:
   - deployment: deploymentJob
     displayName: deploymentJob Display Name
