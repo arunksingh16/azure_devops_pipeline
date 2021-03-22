@@ -1,3 +1,7 @@
 variables:
 - name: tag
   value: '$(Build.BuildId)'
+- name: num
+  value: '$(Build.BuildNumber)'
+- name: pipe
+  value: '$(Build.DefinitionName)'
