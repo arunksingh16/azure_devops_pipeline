@@ -1,0 +1,14 @@
+parameters:
+    param1:
+    JobTimeout: 10
+    param2: 
+
+jobs:
+- job: job0
+  workspace:
+    clean: all
+  timeoutInMinutes: ${{ parameters.JobTimeout }}
+  steps:
+  - checkout: none
+  - bash: |
+      echo "param1 " ${{ parameters.param1 }}
